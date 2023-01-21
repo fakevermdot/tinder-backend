@@ -1,27 +1,24 @@
 import express from "express";
 import mongoose from "mongoose";
-import cards from "./dbCards"
-
+import  cards from "./dbCards.js";
+import Cors from "cors"
 // App Config
 const app = express();
 const port = process.env.PORT || 8001
-const connection_url = `mongodb+srv://admin:u8dBkEJGHCXZ01pn@cluster0.rlmh5sk.mongodb.net/tinderdb?retryWrites=true&w=majority`
+const connection_url = `mongodb+srv://kayden:LqiPucs2IBkJ63SM@cluster0.rlmh5sk.mongodb.net/Cluster0?retryWrites=true&w=majority`
 //Middlewares 
-
-
+app.use(express.json());
+app.use(Cors())
 //DB Config
-mongoose.connect(connection_url , {
-    useMewUrlParser: true,
-    useCreateIndex:true,
-    useUnifiedTopology:true,
-})
+mongoose.set("strictQuery", false);
 
+mongoose.connect(connection_url)
 // API Endpoints
 app.get('/', (req, res) => res.status(200).send("Real madrid is the king of europe league"))
 
-app.post('/tinder/card', (req, res) => {
-    const dbCards = req.body;
-    cards.create(dbCards, (err, data) => {
+app.post('/tinder/cards', (req, res) => {
+    const dbCard = req.body;
+    cards.create(dbCard, (err, data) => {
         if(err) {
             res.status(500).send(err)
         }else {
@@ -31,7 +28,7 @@ app.post('/tinder/card', (req, res) => {
 
 });
 
-app.get('/tinder/card', (req, res) => {
+app.get('/tinder/cards', (req, res) => {
     cards.find((err, data) => {
         if(err) {
             res.status(500).send(err)
